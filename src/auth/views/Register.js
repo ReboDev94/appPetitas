@@ -58,6 +58,7 @@ const Register = ({ navigation }) => {
                         value={displayName}
                         style="mb-10"
                         editable={!loading}
+                        textContentType="name"
                         onChangeText={(value) => setformLogin((prev) => ({ ...prev, displayName: value }))}
                     />
                     <Input
