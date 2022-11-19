@@ -1,5 +1,4 @@
-import React, { useState } from 'react'
-import { createDrawerNavigator } from '@react-navigation/drawer';
+import React from 'react'
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useCheckAuth } from '../common/hooks/useCheckAuth';
 
@@ -7,26 +6,12 @@ import Register from '../auth/views/Register';
 import Login from '../auth/views/Login';
 
 import Splash from '../common/views/Splash';
-import Home from '../common/views/Home';
-import Profile from '../common/views/Profile';
-import Category from '../common/views/Category';
-import Commemoraty from '../common/views/Commemoraty';
-import Event from '../common/views/Event';
+import Root from '../common/views/Root';
+import AddPet from '../common/views/AddPet';
+import { optionsHeader } from '../common/helpers';
+
 
 const Stack = createNativeStackNavigator();
-const Drawer = createDrawerNavigator();
-
-
-const optionsHeader = (title) => {
-    return {
-        title,
-        headerStyle: {
-            backgroundColor: '#6b21a8'
-        },
-        headerTintColor: '#fff',
-    }
-}
-
 
 const AppRouter = () => {
     const { status } = useCheckAuth();
@@ -53,41 +38,19 @@ const AppRouter = () => {
     }
 
     return (
-        <Drawer.Navigator initialRouteName="home" useLegacyImplementation
-            screenOptions={{
-                drawerInactiveTintColor: '#fff',
-                drawerActiveTintColor: '#e9d5ff',
-                drawerStyle: {
-                    backgroundColor: '#a855f7',
-                    width: 240,
-                },
-            }}>
-            <Drawer.Screen
-                name="profile"
-                component={Profile}
-                options={optionsHeader('Perfil')}
+        <Stack.Navigator initialRouteName="root" >
+            <Stack.Screen
+                name="root"
+                component={Root}
+                options={{ headerShown: false }}
             />
-            <Drawer.Screen
-                name="home"
-                component={Home}
-                options={optionsHeader('Mascotas')}
+            <Stack.Screen
+                name="add-pet"
+                component={AddPet}
+                options={optionsHeader('Agregar mascota')}
             />
-            <Drawer.Screen
-                name="commemoraty"
-                component={Commemoraty}
-                options={optionsHeader('Recordatorio')}
-            />
-            <Drawer.Screen
-                name="event"
-                component={Event}
-                options={optionsHeader('Eventos')}
-            />
-            <Drawer.Screen
-                name="category"
-                component={Category}
-                options={optionsHeader('Categorias')}
-            />
-        </Drawer.Navigator>
+        </Stack.Navigator>
+
     )
 
 }

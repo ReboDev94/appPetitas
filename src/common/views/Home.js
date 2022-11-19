@@ -1,6 +1,8 @@
 import React from 'react'
-import { View, Text, SafeAreaView, FlatList, Image } from 'react-native'
+import { View, Text, SafeAreaView, FlatList, Image, TouchableOpacity } from 'react-native'
 import tw from 'twrnc';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
+import { faPlus } from '@fortawesome/free-solid-svg-icons'
 
 const DATA = [
     {
@@ -58,8 +60,10 @@ const ItemPet = ({ name, photo, age, gender }) => (
     </View>
 );
 
-const Home = () => {
-
+const Home = ({ navigation }) => {
+    const addPet = () => {
+        navigation.push('add-pet')
+    }
     const renderItem = ({ item }) => (
         <ItemPet {...item} />
     );
@@ -71,6 +75,12 @@ const Home = () => {
                 renderItem={renderItem}
                 keyExtractor={item => item.id}
             />
+            <TouchableOpacity
+                style={tw.style("border h-14 w-14 absolute bottom-10 right-10 bg-purple-800 rounded-full flex items-center justify-center")}
+                onPress={addPet}
+            >
+                <FontAwesomeIcon icon={faPlus} size="25" style={tw.style("text-white")} />
+            </TouchableOpacity>
         </SafeAreaView>
     )
 }
