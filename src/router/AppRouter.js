@@ -38,7 +38,7 @@ const AppRouter = () => {
     }
 
     return (
-        <Stack.Navigator initialRouteName="root" >
+        <Stack.Navigator initialRouteName="add-pet" >
             <Stack.Screen
                 name="root"
                 component={Root}
