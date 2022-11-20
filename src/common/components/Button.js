@@ -7,8 +7,8 @@ const Button = (props) => {
 
     return (
         <TouchableHighlight onPress={onPress}>
-            <View style={tw.style('p-2 rounded-2', { "bg-gray-500": disabled, 'bg-purple-800': !disabled })}>
-                <Text style={tw.style("text-center", { "text-gray-300": disabled, "text-white": !disabled })}>{children}</Text>
+            <View style={tw.style('py-3 rounded-2', { "bg-gray-500": disabled, 'bg-purple-800': !disabled })}>
+                <Text style={tw.style("text-center font-bold", { "text-gray-300": disabled, "text-white": !disabled })}>{children}</Text>
             </View>
         </TouchableHighlight>
     )

@@ -1,27 +1,38 @@
 import React, { useState, useCallback } from 'react'
+import uuid from 'react-native-uuid';
+
 import tw from 'twrnc';
-import { Text, View, Image, TouchableWithoutFeedback, ActivityIndicator } from 'react-native'
+import { Text, View, Image, TouchableWithoutFeedback, ActivityIndicator, SafeAreaView, ScrollView } from 'react-native'
+import { Picker } from '@react-native-picker/picker';
+import dayjs from 'dayjs';
 import * as ImagePicker from 'expo-image-picker';
 import Input from '../../common/components/Input';
+import DateTimePicker from '@react-native-community/datetimepicker';
+import Button from '../components/Button';
+
 import { fileUpload } from '../helpers/fileUpload';
 import { GENDERS, BREEDS } from '../helpers';
+import { useDispatch } from 'react-redux';
+import { startSavingPet } from '../../store/slices/app/thunks';
 
-const AddPet = () => {
+const AddPet = ({ navigation }) => {
 
+    const dispatch = useDispatch();
+    const [loading, setLoading] = useState(false);
     const [formAddPet, setFormAddPet] = useState({
-        photo: null,
+        photo: "https://img.freepik.com/vector-premium/gato-lindo-lindo-gatito-gatico_49022-14.jpg?w=740",
         name: '',
         birthday: '',
-        gender: null,
-        breed: null,
+        gender: 'HEMBRA',
+        breed: 'GATO',
         color: ''
-
     });
 
-    const [image, setImage] = useState({
-        uri: "https://img.freepik.com/vector-premium/gato-lindo-lindo-gatito-gatico_49022-14.jpg?w=740",
-        loading: false,
-    });
+    const { photo, name, birthday, gender, breed, color } = formAddPet;
+
+    const [date, setDate] = useState(new Date(1598051730000));
+    const [show, setShow] = useState(false);
+
 
     const pickImage = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
@@ -38,43 +49,136 @@ const AddPet = () => {
             if (pickerResult.canceled) {
                 return;
             } else {
-                setImage((prev) => ({ ...prev, loading: true }));
-                const image = pickerResult.assets[0];
-                const secureurl = await fileUpload(image.uri);
-                setImage((prev) => ({ ...prev, loading: false, uri: secureurl }));
+                setLoading(true);
+                const imageAux = pickerResult.assets[0];
+                const secureurl = await fileUpload(imageAux.uri);
+                setFormAddPet((prev) => ({ ...prev, photo: secureurl }));
+                setLoading(false);
             }
         } catch (e) {
             alert("Upload failed");
         }
     };
 
+    const onChange = (event, selectedDate) => {
+        const currentDate = selectedDate;
+        const fDay = dayjs(currentDate).format('DD/MM/YYYY')
+        setShow(false);
+        setDate(currentDate);
+        setFormAddPet((prev) => ({ ...prev, birthday: fDay.toString() }))
+    };
+
+
+    const save = async () => {
+        setLoading(true)
+        await dispatch(startSavingPet({ newPet: formAddPet }))
+            .unwrap()
+            .then(() => {
+                navigation.goBack();
+            }).catch(() => {
+                alert("Ha ocurrido un error");
+            })
+            .finally(() => {
+                setLoading(false)
+            })
+
+    }
+
     return (
-        <View style={tw.style("px-5")}>
-            <View style={tw.style("flex items-center py-10")}>
-                {image.loading ?
-                    <View style={tw.style("border border-purple-300 rounded-full w-36 h-36 flex justify-center")}>
-                        <ActivityIndicator size="large" color="#6b21a8" />
-                    </View> :
-                    <TouchableWithoutFeedback onPress={pickImage} >
-                        <Image style={tw.style("w-36 h-36 rounded-full")} source={{ uri: image.uri }} />
+        <SafeAreaView >
+            <ScrollView style={tw.style("flex flex-col px-5")}>
+                <View style={tw.style("flex items-center py-10")}>
+                    {loading ?
+                        <View style={tw.style("border border-purple-300 rounded-full w-36 h-36 flex justify-center")}>
+                            <ActivityIndicator size="large" color="#6b21a8" />
+                        </View> :
+                        <TouchableWithoutFeedback onPress={pickImage} >
+                            <Image style={tw.style("w-36 h-36 rounded-full")} source={{ uri: photo }} />
+                        </TouchableWithoutFeedback>
+                    }
+                </View>
+                <View style={tw.style("my-10")}>
+                    <Input
+                        title="Nombre"
+                        placeholder="Kuro"
+                        style="mb-6"
+                        value={name}
+                        onChangeText={(value) => setFormAddPet((prev) => ({ ...prev, name: value }))}
+                        editable={!loading}
+
+                    />
+                    <TouchableWithoutFeedback onPress={() => !loading && setShow(true)}  >
+                        <View>
+                            <Input
+                                title="Fecha de nacimiento"
+                                placeholder="26/01/2018"
+                                editable={false}
+                                style="mb-6"
+                                value={birthday}
+                                pointerEvents="none"
+                            />
+                        </View>
                     </TouchableWithoutFeedback>
-                }
-            </View>
-            <View>
-                <Input
-                    title="Nombre"
-                    placeholder="Kuro"
-                    style="mb-6"
-                />
-                <Input
-                    title="Fecha de cumpleaños"
-                    placeholder="Kuro"
-                    editable={false}
-                    style="mb-6"
-                />
-            </View>
-        </View>
+                    {show && (
+                        <DateTimePicker
+                            testID="dateTimePicker"
+                            value={date}
+                            mode='date'
+                            is24Hour={true}
+                            onChange={onChange}
+                            locale="es-ES"
+                        />
+                    )}
+
+                    <View style={tw.style("mb-6")}>
+                        <Text style={tw.style("text-sm")}>Genero.</Text>
+                        <View style={tw.style("border border-purple-800 w-full rounded-2")}>
+                            <Picker
+                                enabled={!loading}
+                                selectedValue={gender}
+                                onValueChange={(itemValue, itemIndex) =>
+                                    setFormAddPet((prev) => ({ ...prev, gender: itemValue }))
+                                }>
+                                {
+                                    GENDERS.map((g) => <Picker.Item key={uuid.v4()} label={g} value={g} />)
+                                }
+                            </Picker>
+                        </View>
+                    </View>
+
+                    <View style={tw.style("mb-6")}>
+                        <Text style={tw.style("text-sm")}>Especie.</Text>
+                        <View style={tw.style("border border-purple-800 w-full rounded-2")}>
+                            <Picker
+                                enabled={!loading}
+                                selectedValue={breed}
+                                onValueChange={(itemValue, itemIndex) =>
+                                    setFormAddPet((prev) => ({ ...prev, breed: itemValue }))
+                                }>
+                                {
+                                    BREEDS.map((g) => <Picker.Item key={uuid.v4()} label={g} value={g} />)
+                                }
+                            </Picker>
+                        </View>
+                    </View>
+
+                    <Input
+                        title="Color"
+                        placeholder="Gris"
+                        style="mb-6"
+                        value={color}
+                        onChangeText={(value) => setFormAddPet((prev) => ({ ...prev, color: value }))}
+                        editable={!loading}
+
+                    />
+
+                    <Button onPress={save} disabled={loading}>Guardar</Button>
+
+                </View>
+            </ScrollView>
+        </SafeAreaView >
     )
 }
+
 
 export default AddPet
