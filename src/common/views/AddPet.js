@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react'
+import React, { useState, useEffect } from 'react'
 import uuid from 'react-native-uuid';
 
 import tw from 'twrnc';
@@ -15,11 +15,13 @@ import { GENDERS, BREEDS } from '../helpers';
 import { useDispatch } from 'react-redux';
 import { startSavingPet } from '../../store/slices/app/thunks';
 
-const AddPet = ({ navigation }) => {
+const AddPet = ({ route, navigation }) => {
 
     const dispatch = useDispatch();
+    const [isEdit, setIsEdit] = useState(false)
     const [loading, setLoading] = useState(false);
     const [formAddPet, setFormAddPet] = useState({
+        id: null,
         photo: "https://img.freepik.com/vector-premium/gato-lindo-lindo-gatito-gatico_49022-14.jpg?w=740",
         name: '',
         birthday: '',
@@ -71,6 +73,8 @@ const AddPet = ({ navigation }) => {
 
     const save = async () => {
         setLoading(true)
+
+        
         await dispatch(startSavingPet({ newPet: formAddPet }))
             .unwrap()
             .then(() => {
@@ -83,6 +87,20 @@ const AddPet = ({ navigation }) => {
             })
 
     }
+
+    useEffect(() => {
+        if (route.params) {
+            const { id, photo, name, birthday, gender, breed, color } = route.params
+            setIsEdit(!!id);
+            if (!!id) {
+                navigation.setOptions({ title: 'Editar mascota' });
+                setFormAddPet({ id, photo, name, birthday, gender, breed, color })
+            }
+        }
+
+
+    }, [])
+
 
     return (
         <SafeAreaView >

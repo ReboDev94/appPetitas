@@ -3,7 +3,6 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 
 import Home from './Home';
 import Profile from './Profile';
-import Category from './Category';
 import Commemoraty from './Commemoraty';
 import Event from './Event';
 import { optionsHeader } from '../helpers';
@@ -41,11 +40,7 @@ const Root = () => {
                 component={Event}
                 options={optionsHeader('Eventos')}
             />
-            <Drawer.Screen
-                name="category"
-                component={Category}
-                options={optionsHeader('Categorias')}
-            />
+
         </Drawer.Navigator>
     )
 }
