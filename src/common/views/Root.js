@@ -11,7 +11,7 @@ const Drawer = createDrawerNavigator();
 
 const Root = () => {
     return (
-        <Drawer.Navigator initialRouteName="profile" useLegacyImplementation
+        <Drawer.Navigator initialRouteName="event" useLegacyImplementation
             screenOptions={{
                 drawerInactiveTintColor: '#fff',
                 drawerActiveTintColor: '#e9d5ff',
@@ -38,7 +38,7 @@ const Root = () => {
             <Drawer.Screen
                 name="event"
                 component={Event}
-                options={optionsHeader('Eventos')}
+                options={optionsHeader('Nuevo evento')}
             />
 
         </Drawer.Navigator>

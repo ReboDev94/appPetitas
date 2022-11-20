@@ -18,7 +18,6 @@ import { startSavingPet } from '../../store/slices/app/thunks';
 const AddPet = ({ route, navigation }) => {
 
     const dispatch = useDispatch();
-    const [isEdit, setIsEdit] = useState(false)
     const [loading, setLoading] = useState(false);
     const [formAddPet, setFormAddPet] = useState({
         id: null,
@@ -32,7 +31,7 @@ const AddPet = ({ route, navigation }) => {
 
     const { photo, name, birthday, gender, breed, color } = formAddPet;
 
-    const [date, setDate] = useState(new Date(1598051730000));
+    const [date, setDate] = useState(new Date());
     const [show, setShow] = useState(false);
 
 
@@ -74,7 +73,7 @@ const AddPet = ({ route, navigation }) => {
     const save = async () => {
         setLoading(true)
 
-        
+
         await dispatch(startSavingPet({ newPet: formAddPet }))
             .unwrap()
             .then(() => {
@@ -91,7 +90,6 @@ const AddPet = ({ route, navigation }) => {
     useEffect(() => {
         if (route.params) {
             const { id, photo, name, birthday, gender, breed, color } = route.params
-            setIsEdit(!!id);
             if (!!id) {
                 navigation.setOptions({ title: 'Editar mascota' });
                 setFormAddPet({ id, photo, name, birthday, gender, breed, color })
@@ -187,7 +185,6 @@ const AddPet = ({ route, navigation }) => {
                         value={color}
                         onChangeText={(value) => setFormAddPet((prev) => ({ ...prev, color: value }))}
                         editable={!loading}
-
                     />
 
                     <Button onPress={save} disabled={loading}>Guardar</Button>
