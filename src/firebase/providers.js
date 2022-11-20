@@ -3,7 +3,7 @@ import {
     createUserWithEmailAndPassword,
     GoogleAuthProvider,
     signInWithPopup,
-    updateProfile
+    updateProfile,
 } from "firebase/auth";
 import { FirebaseAuth } from "./config";
 

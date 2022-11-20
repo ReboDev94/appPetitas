@@ -1,13 +1,15 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { registerWithEmailPassword, singInWithGoogle, singInWithEmailPassword, logoutFirebase } from "../../../firebase/providers";
 import { checkingCredentials, logout, login, setLoading } from "./actions";
+import { updateProfile } from "firebase/auth";
+
+import { FirebaseAuth } from '../../../firebase/config'
 
 export const checkingAuthentication = (email, password) => {
   return async (dispatch) => {
     dispatch(checkingCredentials());
   };
 };
-
 
 export const startGoogleSingIn = () => {
   return async (dispatch) => {
@@ -47,4 +49,15 @@ export const startLogout = () => {
     dispatch(logout());
   }
 }
+
+export const startUpdateProfile = createAsyncThunk("auth/updateProfile",
+  async ({ photo, name }, { rejectWithValue, dispatch }) => {
+    try {
+      const user = await updateProfile(FirebaseAuth.currentUser, { displayName: name, photoURL: photo })
+      return { success: true, user };
+    } catch (error) {
+      return rejectWithValue(error.message)
+    }
+
+  })
 

@@ -11,7 +11,7 @@ const Drawer = createDrawerNavigator();
 
 const Root = () => {
     return (
-        <Drawer.Navigator initialRouteName="home" useLegacyImplementation
+        <Drawer.Navigator initialRouteName="profile" useLegacyImplementation
             screenOptions={{
                 drawerInactiveTintColor: '#fff',
                 drawerActiveTintColor: '#e9d5ff',
