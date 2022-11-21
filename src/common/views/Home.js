@@ -96,6 +96,9 @@ const Home = ({ navigation }) => {
                     refreshing={refreshing}
                     onRefresh={onRefresh}
                 />
+                {pets.length === 0 && (<View style={tw.style("h-full w-full flex items-center justify-center")}>
+                    <Text> No tienes mascotas </Text>
+                </View>)}
             </SafeAreaView>
             <TouchableOpacity
                 style={tw.style("h-14 w-14 absolute bottom-10 right-10 bg-purple-800 rounded-full flex items-center justify-center")}

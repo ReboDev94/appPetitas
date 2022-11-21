@@ -9,6 +9,7 @@ import Splash from '../common/views/Splash';
 import Root from '../common/views/Root';
 import AddPet from '../common/views/AddPet';
 import { optionsHeader } from '../common/helpers';
+import Event from '../common/views/Event';
 
 
 const Stack = createNativeStackNavigator();
@@ -48,6 +49,11 @@ const AppRouter = () => {
                 name="add-pet"
                 component={AddPet}
                 options={optionsHeader('Agregar mascota')}
+            />
+            <Stack.Screen
+                name="event"
+                component={Event}
+                options={optionsHeader('Nuevo evento')}
             />
         </Stack.Navigator>
 

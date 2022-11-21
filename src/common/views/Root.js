@@ -4,14 +4,13 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import Home from './Home';
 import Profile from './Profile';
 import Commemoraty from './Commemoraty';
-import Event from './Event';
 import { optionsHeader } from '../helpers';
 
 const Drawer = createDrawerNavigator();
 
 const Root = () => {
     return (
-        <Drawer.Navigator initialRouteName="event" useLegacyImplementation
+        <Drawer.Navigator initialRouteName="home" useLegacyImplementation
             screenOptions={{
                 drawerInactiveTintColor: '#fff',
                 drawerActiveTintColor: '#e9d5ff',
@@ -35,11 +34,7 @@ const Root = () => {
                 component={Commemoraty}
                 options={optionsHeader('Recordatorio')}
             />
-            <Drawer.Screen
-                name="event"
-                component={Event}
-                options={optionsHeader('Nuevo evento')}
-            />
+
 
         </Drawer.Navigator>
     )

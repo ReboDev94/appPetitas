@@ -9,11 +9,11 @@ import { store } from "./src/store/store";
 export default function App() {
   return (
     <Provider store={store}>
-      <MenuProvider>
-        <NavigationContainer>
+      <NavigationContainer>
+        <MenuProvider>
           <AppRouter />
-        </NavigationContainer>
-      </MenuProvider>
+        </MenuProvider>
+      </NavigationContainer>
     </Provider >
 
   );

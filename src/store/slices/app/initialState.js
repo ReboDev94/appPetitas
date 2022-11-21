@@ -1,5 +1,6 @@
 const initialState = {
-    pets: []
+    pets: [],
+    eventsPets: []
 };
 
 export default initialState;

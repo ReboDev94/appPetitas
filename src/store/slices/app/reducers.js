@@ -15,6 +15,21 @@ const reducers = {
                 return payload;
             return p;
         })
+    },
+    setEvents: (state, { payload }) => {
+        state.eventsPets = payload
+    },
+    deleteEvent: (state, { payload }) => {
+        state.eventsPets = state.eventsPets.filter((ev) => ev.id !== payload);
+    },
+    updateEvent: (state, { payload }) => {
+        state.eventsPets = state.eventsPets.map((ev) => {
+            if (ev.id === payload.id) {
+                const { mascota, ...rest } = payload
+                return { ...ev, ...rest };
+            }
+            return ev;
+        })
     }
 };
 
